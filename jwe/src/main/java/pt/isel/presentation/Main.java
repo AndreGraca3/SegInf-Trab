@@ -7,7 +7,7 @@ public class Main {
         String cmd = args[0];
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < args.length - 1; i++) {
-            sb.append(args[i]);
+            sb.append(args[i]).append(" ");
         }
         switch (cmd) {
             case ("enc"):
