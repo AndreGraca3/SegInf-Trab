@@ -11,19 +11,19 @@ public class SymmetricKeyOperations {
     private final static String algorithm = "RSA/ECB/OAEPPadding";
     private final static String keyAlgorithm = "AES";
 
-    public static byte[] encrypt(PublicKey kp, SecretKey SymmetricKey) throws Exception {
+    public static byte[] encrypt(PublicKey kp, SecretKey symmetricKey) throws Exception {
         Cipher cipher = Cipher.getInstance(algorithm);
 
         cipher.init(Cipher.WRAP_MODE, kp);
 
-        return cipher.wrap(SymmetricKey);
+        return cipher.wrap(symmetricKey);
     }
 
-    public static Key decrypt(PrivateKey kp, byte[] SymmetricKey) throws Exception {
+    public static Key decrypt(PrivateKey kp, byte[] symmetricKey) throws Exception {
         Cipher cipher = Cipher.getInstance(algorithm);
 
         cipher.init(Cipher.UNWRAP_MODE, kp);
 
-        return cipher.unwrap(SymmetricKey, keyAlgorithm, Cipher.SECRET_KEY);
+        return cipher.unwrap(symmetricKey, keyAlgorithm, Cipher.SECRET_KEY);
     }
 }

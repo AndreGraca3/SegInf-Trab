@@ -45,5 +45,4 @@ public class CryptOperations {
 
         return new String(cipher.doFinal(msg));
     }
-
 }

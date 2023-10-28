@@ -12,7 +12,7 @@ public class JweToken {
         res.append(AAD).append(regex);
         for (byte[] info : information) {
             res.append(
-                    new String(Base64.getUrlEncoder().withoutPadding().encode(info))
+                    Base64.getUrlEncoder().withoutPadding().encodeToString(info)
             );
             if (information[information.length - 1] != info)
                 res.append(regex);
@@ -20,11 +20,10 @@ public class JweToken {
         return res.toString();
     }
 
-    public static ArrayList<byte[]> fromString(String msg) {
-        String[] split = msg.split("\\.");
+    public static ArrayList<byte[]> fromArray(String[] split) {
         ArrayList<byte[]> res = new ArrayList<>();
         for (String str : split) {
-            res.add(str.getBytes());
+            res.add(Base64.getUrlDecoder().decode(str));
         }
         return res;
     }

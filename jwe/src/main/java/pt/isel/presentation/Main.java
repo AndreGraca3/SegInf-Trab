@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) throws NoSuchMethodException {
         String cmd = args[0];
         StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < args.length - 2; i++) {
+        for (int i = 1; i < args.length - 1; i++) {
             sb.append(args[i]);
         }
         switch (cmd) {

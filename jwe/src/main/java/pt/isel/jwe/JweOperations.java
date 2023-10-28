@@ -4,7 +4,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.ArrayList;
 
 public class JweOperations {
 
@@ -12,30 +11,26 @@ public class JweOperations {
     private static final int tagLengthBits = 128;
     // 128 bits => 16 bytes
     private static final int tagLengthBytes = tagLengthBits / 8;
+    private static final String AAD_HEADER = "eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ";
 
     public static String enc(String someString, String recipientCertificate) {
         try {
-            // generate Symmetric Key
+            // generate symmetric Key
             KeyGenerator secretKeyGenerator = KeyGenerator.getInstance("AES");
-            SecretKey Ks = secretKeyGenerator.generateKey();
+            SecretKey symmetricKey = secretKeyGenerator.generateKey();
 
-            // generate IV
             byte[] IV = generateIV(ivSize);
 
-            // Header AAD
-            String AAD = "eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ"; // "{\"alg\":\"RSA-OAEP\",\"enc\":\"A256GCM\"}";
+            PublicKey publicKey = CertOperations.getPublicKey(recipientCertificate);
 
-            // get Public Key
-            PublicKey kPub = CertOperations.getPublicKey(recipientCertificate);
-
-            // encrypt Symmetric Key using Public Key
-            byte[] encryptedSymmetricKey = SymmetricKeyOperations.encrypt(kPub, Ks);
+            // encrypt symmetric key using public Key
+            byte[] encryptedSymmetricKey = SymmetricKeyOperations.encrypt(publicKey, symmetricKey);
 
             // encrypt message with Symmetric Key
             byte[] encryptedMessage = CryptOperations.encrypt(
                     someString,
-                    AAD,
-                    Ks,
+                    AAD_HEADER,
+                    symmetricKey,
                     IV,
                     tagLengthBits
             );
@@ -51,7 +46,7 @@ public class JweOperations {
                             .getBytes();
 
             return JweToken.toJweToken(
-                    AAD,
+                    AAD_HEADER,
                     encryptedSymmetricKey,
                     IV,
                     encryptedMessageEncoded,
@@ -65,29 +60,29 @@ public class JweOperations {
 
     public static String dec(String jweString, String recipientPfx) {
         try {
-            ArrayList<byte[]> jweTokenSplit = JweToken.fromString(jweString);
 
-            if (jweTokenSplit.size() != 5)
-                throw new IllegalArgumentException("Expected number of arguments : 5 , got : " + jweTokenSplit.size());
+            String[] jweTokenSplit = jweString.split("\\.");
+            var jweDecodedTokenSplit = JweToken.fromArray(jweTokenSplit);
 
-            String AAD = new String(jweTokenSplit.get(0));
+            if (jweDecodedTokenSplit.size() != 5)
+                throw new IllegalArgumentException("Expected number of arguments : 5 , got : " + jweDecodedTokenSplit.size());
 
-            if (!AAD.equals("eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ"))
+            String AAD = jweTokenSplit[0];
+            if (!AAD.equals(AAD_HEADER))
                 throw new IllegalArgumentException("Received AAD is invalid!");
 
-            PrivateKey kPri = CertOperations.getPrivateKey(recipientPfx);
+            PrivateKey privateKey = CertOperations.getPrivateKey(recipientPfx);
+            byte[] encryptedSymmetricKey = jweDecodedTokenSplit.get(1);
+            SecretKey symmetricKey = (SecretKey) SymmetricKeyOperations.decrypt(privateKey, encryptedSymmetricKey);
 
-            byte[] encryptedSymmetricKey = jweTokenSplit.get(1);
-            SecretKey SymmetricKey = (SecretKey) SymmetricKeyOperations.decrypt(kPri, encryptedSymmetricKey);
+            byte[] IV = jweDecodedTokenSplit.get(2);
 
-            byte[] IV = jweTokenSplit.get(2);
-
-            byte[] encryptedMessage = (new String(jweTokenSplit.get(3)) + new String(jweTokenSplit.get(4))).getBytes();
+            byte[] encryptedMessage = (new String(jweDecodedTokenSplit.get(3)) + new String(jweDecodedTokenSplit.get(4))).getBytes();
 
             return CryptOperations.decrypt(
                     encryptedMessage,
                     AAD,
-                    SymmetricKey,
+                    symmetricKey,
                     IV,
                     tagLengthBits
             );
@@ -105,4 +100,3 @@ public class JweOperations {
         return tmp.toString().getBytes();
     }
 }
-
