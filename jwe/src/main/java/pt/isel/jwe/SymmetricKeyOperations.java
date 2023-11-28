@@ -11,10 +11,10 @@ public class SymmetricKeyOperations {
     private final static String algorithm = "RSA/ECB/OAEPPadding";
     private final static String keyAlgorithm = "AES";
 
-    public static byte[] encrypt(PublicKey kp, SecretKey symmetricKey) throws Exception {
+    public static byte[] encrypt(PublicKey publicKey, SecretKey symmetricKey) throws Exception {
         Cipher cipher = Cipher.getInstance(algorithm);
 
-        cipher.init(Cipher.WRAP_MODE, kp);
+        cipher.init(Cipher.WRAP_MODE, publicKey);
 
         return cipher.wrap(symmetricKey);
     }
