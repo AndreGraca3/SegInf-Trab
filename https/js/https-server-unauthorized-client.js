@@ -14,10 +14,10 @@ app.get("/", function (req, res) {
     res.send("<html><body>🔓Hello World for unauthorized client with node.js🔓</body></html>");
 });
 
-// configure TLS handshake
+// configure TLS handshake in server...
 const options = {
-    key: fs.readFileSync('../certificates/secure-server-key-17nov.pem'),
-    cert: fs.readFileSync('../certificates/secure-server-17nov.pem'),
+    key: fs.readFileSync('../certificates/secure-server-key-17nov.pem'), // chave privada do servidor
+    cert: fs.readFileSync('../certificates/secure-server-chain.pem'), // certificado do servidor
     requestCert: false,
     rejectUnauthorized: false,
 };
