@@ -16,9 +16,12 @@ app.get("/", function (req, res) {
 
 // configure TLS handshake
 const options = {
-    key: fs.readFileSync('../certificates/secure-server-key-17nov.pem'),
-    cert: fs.readFileSync('../certificates/secure-server-17nov.pem'),
-    ca: fs.readFileSync('../certificates/Alice_2.cer'),
+    key: fs.readFileSync('../certificates/secure-server-key-17nov.pem'), // chave privada do servidor
+    cert: fs.readFileSync('../certificates/secure-server-chain.pem'), // certificado do servidor
+    ca: [ // cadeia de certificados para verificação do certificado do cliente.
+        fs.readFileSync('../certificates/CA2.pem'),
+        fs.readFileSync('../certificates/CA2-int.pem')
+    ],
     requestCert: true,
     rejectUnauthorized: true
 };
