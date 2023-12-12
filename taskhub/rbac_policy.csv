@@ -1,0 +1,13 @@
+p, free, /getTaskList, GET
+p, free, /getTask, GET
+
+p, premium, /tasks, GET
+p, premium, /tasks/:id, GET
+p, premium, /tasks, POST
+
+p, admin, /tasks, GET
+p, admin, /tasks/:id, GET
+p, admin, /tasks, POST
+
+g, André Graça, admin
+g, Diogo Santos, free

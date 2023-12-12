@@ -2,14 +2,22 @@ const {
   GOOGLE_AUTHORIZATION_ENDPOINT,
   GOOGLE_TOKEN_ENDPOINT,
   CALLBACK_PATH,
-} = require("../constants");
-const { PORT, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require("../config");
+  GOOGLE_USERINFO_ENDPOINT,
+  GOOGLE_EMAIL_ENDPOINT,
+  GOOGLE_TASKS_TASKLIST_ENDPOINT,
+  GOOGLE_TASKS_ENDPOINT,
+} = require("../../constants");
+const {
+  PORT,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+} = require("../../config");
 
 function getGoogleOAuthUrl(state) {
   return (
     `${GOOGLE_AUTHORIZATION_ENDPOINT}?` +
     `client_id=${GOOGLE_CLIENT_ID}&` +
-    `scope=openid&` +
+    `scope=openid ${GOOGLE_USERINFO_ENDPOINT} ${GOOGLE_EMAIL_ENDPOINT} ${GOOGLE_TASKS_ENDPOINT}&` +
     `state=${state}&` +
     `response_type=code&` +
     `redirect_uri=http://localhost:${PORT}${CALLBACK_PATH}`
@@ -17,7 +25,7 @@ function getGoogleOAuthUrl(state) {
 }
 
 async function getGoogleToken(code) {
-  const response = await fetch(GOOGLE_TOKEN_ENDPOINT, {
+  const tokenRes = await fetch(GOOGLE_TOKEN_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -30,12 +38,21 @@ async function getGoogleToken(code) {
       grant_type: "authorization_code",
     }),
   });
-  const token = await response.json();
-  console.log("Got Token response:", token);
-  return token;
+  const tokenDetails = await tokenRes.json();
+  return tokenDetails.access_token;
+}
+
+async function getGoogleUserInfo(token) {
+  const res = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return await res.json();
 }
 
 module.exports = {
   getGoogleOAuthUrl,
   getGoogleToken,
+  getGoogleUserInfo,
 };
