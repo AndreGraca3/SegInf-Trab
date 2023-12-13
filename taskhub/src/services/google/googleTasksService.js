@@ -1,13 +1,16 @@
+const { GOOGLE_TASKS_ENDPOINT } = require("./googleUris");
+
 async function getTasksFromUser(token) {
   const res = await fetch(
-    "https://www.googleapis.com/tasks/v1/users/@me/lists",
+    GOOGLE_TASKS_ENDPOINT,
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }
   );
-  return await res.json();
+  const tasksListDetails = await res.json();
+  return tasksListDetails.items;
 }
 
 module.exports = {

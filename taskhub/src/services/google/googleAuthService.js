@@ -1,12 +1,11 @@
+const { CALLBACK_PATH } = require("../../constants");
 const {
   GOOGLE_AUTHORIZATION_ENDPOINT,
   GOOGLE_TOKEN_ENDPOINT,
-  CALLBACK_PATH,
-  GOOGLE_USERINFO_ENDPOINT,
-  GOOGLE_EMAIL_ENDPOINT,
-  GOOGLE_TASKS_TASKLIST_ENDPOINT,
-  GOOGLE_TASKS_ENDPOINT,
-} = require("../../constants");
+  GOOGLE_USERINFO_SCOPE_ENDPOINT,
+  GOOGLE_EMAIL_SCOPE_ENDPOINT,
+  GOOGLE_TASKS_SCOPE_ENDPOINT,
+} = require("./googleUris");
 const {
   PORT,
   GOOGLE_CLIENT_ID,
@@ -17,7 +16,7 @@ function getGoogleOAuthUrl(state) {
   return (
     `${GOOGLE_AUTHORIZATION_ENDPOINT}?` +
     `client_id=${GOOGLE_CLIENT_ID}&` +
-    `scope=openid ${GOOGLE_USERINFO_ENDPOINT} ${GOOGLE_EMAIL_ENDPOINT} ${GOOGLE_TASKS_ENDPOINT}&` +
+    `scope=openid ${GOOGLE_USERINFO_SCOPE_ENDPOINT} ${GOOGLE_EMAIL_SCOPE_ENDPOINT} ${GOOGLE_TASKS_SCOPE_ENDPOINT}&` +
     `state=${state}&` +
     `response_type=code&` +
     `redirect_uri=http://localhost:${PORT}${CALLBACK_PATH}`

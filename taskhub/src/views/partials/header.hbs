@@ -6,9 +6,11 @@
     </a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item {{#if activeTask}}active{{/if}}">
-          <a class="nav-link" href="/tasks">Tasks</a>
+        {{#if user}}
+          <li class="nav-item {{#if activeTask}}active{{/if}}">
+           <a class="nav-link" href="/tasks">📝Tasks</a>
         </li>
+        {{/if}}
       </ul>
     </div>
     <div class="d-flex align-items-center justify-content-center h-100 ">
