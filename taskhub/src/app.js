@@ -22,10 +22,12 @@ hbs.registerPartials(path.join(viewsPath, "partials"));
 
 // Load routes
 app.use(appController);
-app.use(githubController);
-app.use(authController);
-app.use(roleController);
+app.use(authController.router);
+app.use(authController.forceGoogleAuth);
 app.use(tasksController);
+app.use(roleController);
+app.use(authController.forceGithubAuth);
+app.use(githubController);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

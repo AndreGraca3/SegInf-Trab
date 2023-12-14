@@ -1,0 +1,41 @@
+<!-- github-repos.hbs -->
+
+<div class="container mt-4">
+  <div class="border-bottom">
+    <h1 class="mb-4">My GitHub Repositories</h1>
+  </div>
+  <div class="row">
+    {{#each repos}}
+      <div class="col-md-4 my-2" style="width: fit-content;">
+        <div class="card border-4 border-black">
+          <div class="card-body">
+            <h5
+              class="card-title"
+              style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"
+            >{{this.name}}</h5>
+            {{#if this.milestones.length}}
+              <div class="btn-group dropend">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  Milestones</button>
+                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
+                  {{#each this.milestones}}
+                    <li>
+                      <button class="dropdown-item gitMilestone text-truncate " repoId="{{../id}}" milestoneId="{{id}}">
+                        🎯 {{this.title}}
+                      </button>
+                    </li>
+                  {{/each}}
+                </ul>
+              </div>
+            {{else}}
+              <p class="text-danger fw-bold card-text">No Milestones</p>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
+<script>
+  // Add your JavaScript logic for GitHub milestones here
+</script>

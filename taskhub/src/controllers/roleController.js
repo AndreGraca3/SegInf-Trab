@@ -1,11 +1,12 @@
 const express = require("express");
 const rolService = require("../services/roleService");
+const { GOOGLE_COOKIE_NAME } = require("../constants");
 
 const router = express.Router();
 
 router.use(async (req, rsp, next) => {
   const isPermitted = await rolService.canAccess(
-    req.cookies.user.name,
+    req.cookies[GOOGLE_COOKIE_NAME].name,
     req.path,
     req.method
   );
