@@ -2,7 +2,7 @@ const express = require("express");
 const randomstring = require("randomstring");
 const googleAuthService = require("../services/google/googleAuthService");
 const { CALLBACK_PATH } = require("../constants");
-const {getRoleFromUser} = require("../services/roleService");
+const { getRoleFromUser } = require("../services/roleService");
 
 const router = express.Router();
 
@@ -17,7 +17,13 @@ router.get(CALLBACK_PATH, async (req, rsp) => {
   const { state: cookieState } = req.cookies;
 
   if (state !== cookieState) {
-    rsp.status(401).send("Unauthorized state mismatch");
+    rsp
+      .status(401)
+      .json({
+        title: "Unauthorized",
+        status: 401,
+        message: "Unauthorized state mismatch",
+      });
     return;
   }
   rsp.clearCookie("state");
@@ -29,11 +35,15 @@ router.get(CALLBACK_PATH, async (req, rsp) => {
     email: userInfo.email,
     picture: userInfo.picture,
     token: token,
-    role: await getRoleFromUser(userInfo.name)
+    role: await getRoleFromUser(userInfo.name),
   };
-  console.log(user)
-  rsp.cookie("user", user, { maxAge: 10 * (60 * 1000), httpOnly: true });
+  rsp.cookie("user", user, { maxAge: 60 * (60 * 1000), httpOnly: true });
   rsp.status(302).redirect("/");
+});
+
+router.get("/logout", (req, rsp) => {
+  rsp.clearCookie("user");
+  rsp.redirect("/");
 });
 
 router.use((req, rsp, next) => {

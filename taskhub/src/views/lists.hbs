@@ -1,0 +1,74 @@
+<div class="container mt-4">
+  <div class="border-bottom">
+    <h1 class="mb-4">My Google Tasks Lists</h1>
+
+    <div class="btn-group dropend">
+      <button class="btn btn-primary dropdown-toggle" id="githubImportBtn" data-bs-toggle="dropdown">
+        Import from Github
+        <img src="https://img.icons8.com/ios-filled/50/000000/github.png" width="20" height="20" />
+      </button>
+      <ul class="dropdown-menu dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+        <button class="dropdown-item repo-item">🗑️</button>
+      </ul>
+    </div>
+
+  </div>
+  <div class="row">
+    {{#each lists}}
+      <div class="col-md-4 my-2" style="width: fit-content;">
+        <div class="card border-4 border-black">
+          <div class="card-body">
+            <h5
+            class="card-title"
+            style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"
+            >{{title}}</h5>
+            <p class="card-text text-muted">Last Modified: {{updated}}</p>
+            {{#if tasks.length}}
+              <div class="btn-group dropend">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                See Tasks</button>
+                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
+                  <button class="dropdown-item gitRepo" listId="{{../id}}" taskId="{{id}}">🗑️ {{title}}</button>
+                </ul>
+              </div>
+            {{else}}
+              <p class="text-danger fw-bold card-text">No Tasks</p>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
+<script>
+  const taskItems = document.querySelectorAll('.task-item');
+  taskItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const listId = item.getAttribute('listId');
+      const taskId = item.getAttribute('taskId');
+      fetch(`/lists/${listId}/tasks/${taskId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ taskId })
+      })
+        .then(async res => {
+          if (!res.ok) {
+            const err = await res.json();
+            console.log(err);
+            alert(`Could not delete task: ${err.message}`)
+          } else {            
+            const list = item.parentNode;
+            item.remove();
+            if(!list.children.length) {
+              const warning = document.createElement('p')
+              warning.classList.add('text-danger', 'fw-bold', 'card-text')
+              warning.textContent = 'No Tasks'
+              list.parentNode.replaceWith(warning);
+            }
+          }
+        })
+    });
+  });
+</script>

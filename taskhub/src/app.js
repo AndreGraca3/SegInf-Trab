@@ -5,6 +5,7 @@ const hbs = require("hbs");
 const { PORT } = require("./config");
 const appController = require("./controllers/appController");
 const authController = require("./controllers/authController");
+const githubController = require("./controllers/githubController");
 const roleController = require("./controllers/roleController");
 const tasksController = require("./controllers/tasksController");
 
@@ -21,6 +22,7 @@ hbs.registerPartials(path.join(viewsPath, "partials"));
 
 // Load routes
 app.use(appController);
+app.use(githubController);
 app.use(authController);
 app.use(roleController);
 app.use(tasksController);

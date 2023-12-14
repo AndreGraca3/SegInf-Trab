@@ -7,8 +7,8 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         {{#if user}}
-          <li class="nav-item {{#if activeTask}}active{{/if}}">
-           <a class="nav-link" href="/tasks">📝Tasks</a>
+          <li class="nav-item">
+           <a class="nav-link" href="/lists">📋Lists</a>
         </li>
         {{/if}}
       </ul>
@@ -16,8 +16,13 @@
     <div class="d-flex align-items-center justify-content-center h-100 ">
       {{#if user}}
         <div class="d-flex align-items-center align-content-center h-100 ">
-          <span class="d-flex navbar-text text-center px-2">Welcome back, {{user.name}} 👋</span>
-          <img width="40px" height="40px" style="border-radius: 50%;" src={{user.picture}} />
+          <div class="d-flex flex-column align-items-center h-100 justify-content-center px-2">
+            <span class="navbar-text text-center">Welcome back, {{user.name}} 👋</span>
+            <span class="text-center">{{user.role}}</span>
+          </div>
+          <a href="/logout">
+            <img width="40px" height="40px" style="border-radius: 50%;" src={{user.picture}} />
+          </a>
         </div>
       {{else}}
         <a class="d-flex text-center" style="height: 100%;" href="/login">

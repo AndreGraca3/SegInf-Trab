@@ -1,10 +1,10 @@
 const express = require("express");
-const { canAccess } = require("../services/roleService");
+const rolService = require("../services/roleService");
 
 const router = express.Router();
 
 router.use(async (req, rsp, next) => {
-  const isPermitted = await canAccess(
+  const isPermitted = await rolService.canAccess(
     req.cookies.user.name,
     req.path,
     req.method
@@ -12,9 +12,11 @@ router.use(async (req, rsp, next) => {
   if (isPermitted) {
     next();
   } else {
-    rsp
-      .status(403)
-      .send("Forbidden, you don't have role permission to make this action");
+    rsp.status(403).send({
+      title: "Forbidden",
+      status: 403,
+      message: "You don't have role permission to make this action",
+    });
   }
 });
 

@@ -1,13 +1,12 @@
-p, free, /getTaskList, GET
-p, free, /getTask, GET
+p, free, /lists, GET
 
-p, premium, /tasks, GET
-p, premium, /tasks/:id, GET
-p, premium, /tasks, POST
+p, premium, /lists, (GET)|(POST)
+p, premium, /lists/:id/tasks, POST
+p, premium, /lists/:listId/tasks/:taskId, DELETE
 
-p, admin, /tasks, GET
-p, admin, /tasks/:id, GET
-p, admin, /tasks, POST
+p, admin, /lists, (GET)|(POST)
+p, admin, /lists/:id/tasks, POST
+p, admin, /lists/:listId/tasks/:taskId, DELETE
 
 g, André Graça, admin
 g, Diogo Santos, free
