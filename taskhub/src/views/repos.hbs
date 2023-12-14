@@ -19,11 +19,15 @@
                   Milestones</button>
                 <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
                   {{#each this.milestones}}
-                    <li>
-                      <button class="dropdown-item gitMilestone text-truncate " repoId="{{../id}}" milestoneId="{{id}}">
-                        🎯 {{this.title}}
-                      </button>
-                    </li>
+                    <div class="dropdown">
+                      <button class="btn dropbtn dropdown-item gitMilestone dropdown-toggle text-truncate" data-bs-toggle="dropdown" mileStoneTitle="{{title}}">
+                      🎯 {{this.title}}</button>
+                      <div class="dropdown-content">
+                        {{#each ../../lists}}
+                          <button class="text-truncate task-list-item" listId={{id}}>{{title}}</button>
+                        {{/each}}
+                      </div>
+                    </div>
                   {{/each}}
                 </ul>
               </div>
@@ -36,6 +40,60 @@
     {{/each}}
   </div>
 </div>
+<style>
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  max-width: 160px;
+  display: none;
+  position: absolute;
+  border-radius: 100%; !important
+  min-width: 160px;
+  z-index: 1;
+  left: 100%;
+  top: 0;
+}
+
+/* Links inside the dropdown */
+.dropdown-content button {
+  width: 100%;
+  background-color: rgb(60, 55, 55);
+  padding: 6px;
+  display: block;
+  opacity: 0.8;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown-content button:hover {opacity: 1;}
+</style>
 <script>
   // Add your JavaScript logic for GitHub milestones here
+  const taskListItems = document.querySelectorAll('.task-list-item');
+  taskListItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const listId = item.getAttribute('listId');
+      const milestone = item.parentNode.parentNode.querySelector('.gitMilestone');
+      const milestoneId = milestone.getAttribute('milestoneId');
+      const milestoneTitle = milestone.getAttribute('milestoneTitle');
+      const listTitle = item.textContent;
+      fetch(`/lists/${listId}/tasks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ title: milestoneTitle })
+      })
+        .then(async res => {
+          if (!res.ok) {
+            const err = await res.json();
+            console.log(err);
+            alert(`Could not create task: ${err.message}`)
+          } else {
+            alert('Task created successfully!');
+          }
+        })
+    });
+  });
 </script>

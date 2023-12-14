@@ -23,7 +23,9 @@
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 Tasks</button>
                 <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <button class="dropdown-item task-item" listId="{{../id}}" taskId="{{id}}">🗑️ | {{title}}</button>
+                  {{#each tasks}}
+                    <button class="dropdown-item task-item" listId="{{../id}}" taskId="{{id}}">🗑️ | {{title}}</button>
+                  {{/each}}
                 </ul>
               </div>
             {{else}}
