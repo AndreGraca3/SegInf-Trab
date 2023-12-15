@@ -1,0 +1,12 @@
+p, free, /lists, GET
+
+p, premium, /lists, (GET)|(POST)
+p, premium, /lists/:id/tasks, POST
+p, premium, /lists/:listId/tasks/:taskId, DELETE
+
+p, admin, /lists, (GET)|(POST)
+p, admin, /lists/:id/tasks, POST
+p, admin, /lists/:listId/tasks/:taskId, DELETE
+
+g, André Graça, admin
+g, Diogo Santos, free

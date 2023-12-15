@@ -1,10 +1,17 @@
-const GOOGLE_AUTHORIZATION_ENDPOINT =
-  "https://accounts.google.com/o/oauth2/v2/auth";
-const CALLBACK_PATH = "/callback";
-const GOOGLE_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
+const GOOGLE_CALLBACK_PATH = "/google/callback";
+const GITHUB_CALLBACK_PATH = "/github/callback";
+
+const GOOGLE_STATE_COOKIE_NAME = "googleState";
+const GITHUB_STATE_COOKIE_NAME = "githubState";
+
+const GOOGLE_COOKIE_NAME = "google";
+const GITHUB_COOKIE_NAME = "github";
 
 module.exports = {
-  GOOGLE_AUTHORIZATION_ENDPOINT,
-  CALLBACK_PATH,
-  GOOGLE_TOKEN_ENDPOINT,
+  GOOGLE_CALLBACK_PATH,
+  GITHUB_CALLBACK_PATH,
+  GOOGLE_STATE_COOKIE_NAME,
+  GITHUB_STATE_COOKIE_NAME,
+  GOOGLE_COOKIE_NAME,
+  GITHUB_COOKIE_NAME,
 };
